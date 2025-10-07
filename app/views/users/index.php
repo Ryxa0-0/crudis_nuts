@@ -7,97 +7,86 @@
   <link rel="stylesheet" href="<?=base_url();?>/public/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-pink-100 via-rose-100 to-pink-200 text-pink-900 font-sans min-h-screen">
+<body class="bg-gray-900 text-gray-100 font-sans">
 
   <!-- Navbar -->
-  <nav class="bg-gradient-to-r from-pink-400 to-rose-400 shadow-md">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <a href="#" class="text-white font-bold text-2xl tracking-wide">💗 User Management</a>
-      <a href="<?=site_url('users/create')?>"
-         class="bg-white text-pink-600 font-semibold px-4 py-2 rounded-full shadow hover:bg-pink-50 transition duration-200">
-        ➕ Add User
-      </a>
+  <nav class="bg-gradient-to-r from-gray-800 to-gray-700 shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <a href="#" class="text-white font-semibold text-xl tracking-wide">🔧 User Management</a>
     </div>
   </nav>
 
   <!-- Main Content -->
   <div class="max-w-6xl mx-auto mt-10 px-4">
-    <div class="bg-white/80 backdrop-blur-md shadow-2xl rounded-3xl p-8 border border-pink-100 animate-fadeIn">
-      
+    <div class="bg-gray-800 shadow-2xl rounded-2xl p-6">
       <!-- Header -->
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-pink-600">🧁 User Directory</h1>
+        <h1 class="text-2xl font-semibold text-white">🧑‍🤝‍🧑 User Directory</h1>
       </div>
-
       <!-- Search Bar -->
-      <form method="get" action="<?=site_url()?>" class="flex mb-6">
-        <input 
-          type="text" 
-          name="q" 
-          value="<?=html_escape($_GET['q'] ?? '')?>" 
-          placeholder="Search student..." 
-          class="w-full px-4 py-2 border border-pink-200 rounded-l-full bg-pink-50 placeholder-pink-400 text-pink-800 focus:ring-2 focus:ring-pink-400 focus:outline-none">
-        <button type="submit" class="bg-gradient-to-r from-pink-400 to-rose-400 text-white px-4 py-2 rounded-r-full hover:opacity-90 transition duration-200">
-          🔍
-        </button>
-      </form>
+<form method="get" action="<?=site_url()?>" class="search-bar">
+  <input 
+    type="text" 
+    name="q" 
+    value="<?=html_escape($_GET['q'] ?? '')?>" 
+    placeholder="Search student..." 
+    class="search-input">
+  <button type="submit" class="search-btn">
+    <i class="fa fa-search"></i>
+  </button>
+</form>
 
       <!-- Table -->
-      <div class="overflow-x-auto rounded-2xl shadow">
+      <div class="overflow-x-auto rounded-xl shadow">
         <table class="w-full text-center border-collapse">
           <thead>
-            <tr class="bg-gradient-to-r from-pink-300 to-rose-300 text-white">
+            <tr class="bg-gradient-to-r from-gray-700 to-gray-600 text-white">
               <th class="py-3 px-4">ID</th>
-              <th class="py-3 px-4">Last Name</th>
-              <th class="py-3 px-4">First Name</th>
+              <th class="py-3 px-4">Lastname</th>
+              <th class="py-3 px-4">Firstname</th>
               <th class="py-3 px-4">Email</th>
               <th class="py-3 px-4">Action</th>
             </tr>
           </thead>
           <tbody>
             <?php foreach(html_escape($users) as $user): ?>
-              <tr class="hover:bg-pink-100 transition duration-200">
+              <tr class="hover:bg-gray-700 transition duration-200">
                 <td class="py-3 px-4"><?=($user['id']);?></td>
                 <td class="py-3 px-4"><?=($user['last_name']);?></td>
                 <td class="py-3 px-4"><?=($user['first_name']);?></td>
                 <td class="py-3 px-4">
-                  <span class="bg-pink-50 text-pink-600 text-sm font-medium px-3 py-1 rounded-full border border-pink-200">
+                  <span class="bg-gray-700 text-cyan-400 text-sm font-medium px-3 py-1 rounded-full">
                     <?=($user['email']);?>
                   </span>
                 </td>
-                <td class="py-3 px-4 space-x-2">
+                <td class="py-3 px-4">
                   <a href ="<?=site_url('users/update/'.$user['id']);?>" 
-                     class="text-yellow-600 hover:underline font-medium">✏️ Update</a>
+                     class="text-yellow-400 hover:underline">Update</a> | 
                   <a href ="<?=site_url('users/delete/'.$user['id']);?>"
                      onclick="return confirm('Are you sure you want to delete this record?');"
-                     class="text-red-500 hover:underline font-medium">🗑️ Delete</a>
+                     class="text-red-400 hover:underline">Delete</a>
                 </td>
               </tr>
             <?php endforeach; ?>
           </tbody>
         </table>
       </div>
+       <!-- Pagination -->
+<div class="mt-4 flex justify-center">
+  <div class="pagination flex space-x-2">
+      <?=$page ?? ''?>
+  </div>
+</div>
 
-      <!-- Pagination -->
-      <div class="mt-6 flex justify-center">
-        <div class="pagination flex space-x-2">
-          <?=$page ?? ''?>
-        </div>
+      <!-- Button -->
+      <div class="mt-5">
+        <a href="<?=site_url('users/create')?>"
+           class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-full shadow transition duration-200">
+          ➕ Create New User
+        </a>
       </div>
-
     </div>
   </div>
-
-  <!-- Soft fade-in animation -->
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fadeIn {
-      animation: fadeIn 0.9s ease;
-    }
-  </style>
 
 </body>
 </html>
