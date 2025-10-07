@@ -1,3 +1,4 @@
+# Use official PHP 8.1 + Apache image
 FROM php:8.1-apache
 
 # Enable Apache mod_rewrite
@@ -28,11 +29,17 @@ WORKDIR /var/www/html/
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-# Install dependencies (if composer.json exists)
+# Install dependencies (ignore composer.json missing)
 RUN if [ -f composer.json ]; then composer install || true; fi
 
-# Expose Apache port
-EXPOSE 80
+# Fix permissions for writable folder (CodeIgniter 3/4)
+RUN mkdir -p /var/www/html/writable/sessions && chmod -R 777 /var/www/html/writable
 
-RUN mkdir -p /var/www/html/writable/sessions && chmod -R 777 /var/www/html/writable/sessions
+# Apache listens on port 8080 in Render by default
+EXPOSE 8080
+
+# Tell Apache to use port 8080 (Render default)
+RUN sed -i 's/80/8080/g' /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
+
+# Start Apache
 CMD ["apache2-foreground"]
